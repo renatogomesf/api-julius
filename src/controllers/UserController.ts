@@ -8,7 +8,9 @@ class UserController {
   //======================================================================
   async getAllUser(req: Request, res: Response): Promise<Response | any> {
     try {
-      const users = await userRepository.find();
+      const users = await userRepository.find({
+        relations: ["meta"],
+      });
       return res.status(200).send({ users });
     } catch (error) {
       return res.status(500).send({ message: error });
@@ -22,7 +24,10 @@ class UserController {
     const { id } = req.params;
 
     try {
-      const user = await userRepository.findOneBy({ id_user: id });
+      const user = await userRepository.findOne({
+        where: { id_user: id },
+        relations: ["meta"],
+      });
       return res.status(200).send({ user });
     } catch (error) {
       return res.status(500).send({ message: error });
@@ -33,9 +38,9 @@ class UserController {
   // CRIA UM USUÁRIO
   //======================================================================
   async createUser(req: Request, res: Response): Promise<Response | any> {
-    const { firstName, lastName, age, wage } = req.body;
+    const { firstName, lastName, email, age, wage } = req.body;
 
-    if (!firstName || !lastName || !age || !wage) {
+    if (!firstName || !lastName || !email || !age || !wage) {
       return res.status(401).send({ message: "preencha todos os campos" });
     }
 
@@ -43,6 +48,7 @@ class UserController {
       const newUser = userRepository.create({
         firstName,
         lastName,
+        email,
         age,
         wage,
       });
@@ -61,9 +67,9 @@ class UserController {
   async updateUser(req: Request, res: Response): Promise<Response | any> {
     const { id } = req.params;
 
-    const { firstName, lastName, age, wage } = req.body;
+    const { firstName, lastName, email, age, wage } = req.body;
 
-    if (!id || !firstName || !lastName || !age || !wage) {
+    if (!id || !firstName || !lastName || !email || !age || !wage) {
       return res.status(401).send({ message: "preencha todos os campos" });
     }
 
@@ -77,6 +83,7 @@ class UserController {
       // atualizar os campos
       user.firstName = firstName;
       user.lastName = lastName;
+      user.email = email
       user.age = age;
       user.wage = wage;
 
