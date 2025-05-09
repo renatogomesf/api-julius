@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { metaRepository } from "../repositories/MetaRepository";
+import { metasRepository } from "../repositories/MetaRepository";
 import { Meta } from "../entities/Meta";
 
 import { userRepository } from "../repositories/UserRepository";
@@ -9,10 +9,10 @@ class MetaController {
   //======================================================================
   // BUSCA TODAS AS METAS
   //======================================================================
-  async getAllMeta(req: Request, res: Response): Promise<Response | any> {
+  async getAllMetas(req: Request, res: Response): Promise<Response | any> {
     try {
-      const meta = await metaRepository.find();
-      return res.status(200).send({ meta });
+      const metas = await metasRepository.find();
+      return res.status(200).send({ metas });
     } catch (error) {
       return res.status(500).send({ message: error });
     }
@@ -25,7 +25,7 @@ class MetaController {
     const { id } = req.params;
 
     try {
-      const meta = await metaRepository.findOne({
+      const meta = await metasRepository.findOne({
         where: { id_meta: id },
         relations: ["user"],
       });
@@ -61,7 +61,7 @@ class MetaController {
       newMeta.valorTotal = valorTotal;
       newMeta.user = user;
 
-      await metaRepository.save(newMeta);
+      await metasRepository.save(newMeta);
 
       return res.status(201).send({ meta: newMeta });
     } catch (error) {
@@ -87,7 +87,7 @@ class MetaController {
       return res.status(404).send({ message: "Usuário não encontrado" });
     }
 
-    const metaUpdate = await metaRepository.findOneBy({ id_meta: id_meta });
+    const metaUpdate = await metasRepository.findOneBy({ id_meta: id_meta });
 
     if (!metaUpdate) {
       return res.status(404).send({ message: "Meta não encontrada" });
@@ -98,7 +98,7 @@ class MetaController {
       metaUpdate.valorAtual = valorAtual;
       metaUpdate.valorTotal = valorTotal;
 
-      await metaRepository.save(metaUpdate);
+      await metasRepository.save(metaUpdate);
 
       return res.status(201).send({ meta: metaUpdate });
     } catch (error) {
@@ -108,7 +108,7 @@ class MetaController {
 
 
   //======================================================================
-  // DELETA UM USUÁRIO
+  // DELETA UMA META
   //======================================================================
   async deleteMeta(req: Request, res: Response): Promise<Response | any> {
     const { id } = req.params;
@@ -118,15 +118,13 @@ class MetaController {
     }
 
     try {
-      const meta = await metaRepository.findOneBy({ id_meta: id });
-
-      console.log(meta);
+      const meta = await metasRepository.findOneBy({ id_meta: id });
 
       if (!meta) {
         return res.status(404).send({ message: "Meta não encontrada." });
       }
 
-      await metaRepository.delete(id);
+      await metasRepository.delete(id);
 
       return res.status(200).send({ message: "Meta deletada com sucesso." });
     } catch (error) {

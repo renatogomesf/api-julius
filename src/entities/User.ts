@@ -8,6 +8,8 @@ import {
 } from "typeorm";
 
 import { Meta } from "./Meta";
+import { Ganhos } from "./Ganhos";
+import { Despesas } from "./Despesas";
 
 @Entity()
 export class User {
@@ -36,5 +38,11 @@ export class User {
   updatedAt: Date;
 
   @OneToMany(() => Meta, (meta) => meta.user)
-  meta: Meta[];
+  metas: Meta[];
+
+  @OneToMany(()=> Ganhos, (ganhos)=>ganhos.user)
+  ganhos: Ganhos[]
+  
+  @OneToMany(()=> Despesas, (ganhos)=>ganhos.user)
+  despesas: Despesas[]
 }

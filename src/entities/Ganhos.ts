@@ -10,18 +10,18 @@ import {
 import { User } from "./User";
 
 @Entity()
-export class Meta {
+export class Ganhos {
   @PrimaryGeneratedColumn()
-  id_meta: string;
+  id_ganho: string;
 
   @Column()
-  meta: string;
+  data: Date;
 
   @Column()
-  valorAtual: number;
+  descricao: string;
 
   @Column()
-  valorTotal: number;
+  valor: number;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -29,6 +29,6 @@ export class Meta {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.metas)
-  user: User;
+  @ManyToOne(()=> User, (user)=>user.ganhos)
+  user: User
 }

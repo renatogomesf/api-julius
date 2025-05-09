@@ -9,7 +9,7 @@ class UserController {
   async getAllUser(req: Request, res: Response): Promise<Response | any> {
     try {
       const users = await userRepository.find({
-        relations: ["meta"],
+        relations: ["metas", "ganhos", "despesas"],
       });
       return res.status(200).send({ users });
     } catch (error) {
@@ -26,7 +26,7 @@ class UserController {
     try {
       const user = await userRepository.findOne({
         where: { id_user: id },
-        relations: ["meta"],
+        relations: ["metas", "ganhos", "despesas"],
       });
       return res.status(200).send({ user });
     } catch (error) {
@@ -83,7 +83,7 @@ class UserController {
       // atualizar os campos
       user.firstName = firstName;
       user.lastName = lastName;
-      user.email = email
+      user.email = email;
       user.age = age;
       user.wage = wage;
 
@@ -109,8 +109,6 @@ class UserController {
 
     try {
       const user = await userRepository.findOneBy({ id_user: id });
-
-      console.log(user);
 
       if (!user) {
         return res.status(404).send({ message: "Usuário não encontrado." });

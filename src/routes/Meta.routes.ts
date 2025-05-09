@@ -5,7 +5,7 @@ import MetaController from "../controllers/MetaController";
 const metasRoute = Router()
 
 // não faz muito sentido pois as metas já vem quando busaca usuário
-metasRoute.get('/all_metas', MetaController.getAllMeta)
+metasRoute.get('/all_metas', MetaController.getAllMetas)
 metasRoute.get('/id_meta/:id', MetaController.getMetaID)
 //=================================================================
 
