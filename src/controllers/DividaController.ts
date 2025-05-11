@@ -1,43 +1,43 @@
 import { Request, Response } from "express";
 
 import { userRepository } from "../repositories/UserRepository";
-import { devedoresRepository } from "../repositories/DevedorRepository";
-import { Devedores } from "../entities/Devedores";
+import { dividasRepository } from "../repositories/DividaRepository";
+import { Dividas } from "../entities/Dividas";
 
-class DevedoresController {
+class DividasController {
   //======================================================================
-  // BUSCA TODOS OS DEVEDORES
+  // BUSCA TODAS AS DIVIDAS
   //======================================================================
-  async getAllDevedores(req: Request, res: Response): Promise<Response | any> {
+  async getAllDividas(req: Request, res: Response): Promise<Response | any> {
     try {
-      const devedores = await devedoresRepository.find();
-      return res.status(200).send({ devedores });
+      const dividas = await dividasRepository.find();
+      return res.status(200).send({ dividas });
     } catch (error) {
       return res.status(500).send({ message: error });
     }
   }
 
   //======================================================================
-  //BUSCA DEVEDOR POR ID
+  //BUSCA DIVIDA POR ID
   //======================================================================
-  async getDevedorID(req: Request, res: Response): Promise<Response | any> {
+  async getDividaID(req: Request, res: Response): Promise<Response | any> {
     const { id } = req.params;
 
     try {
-      const devedor = await devedoresRepository.findOne({
-        where: { id_devedor: id },
+      const divida = await dividasRepository.findOne({
+        where: { id_divida: id },
         relations: ["user"],
       });
-      return res.status(200).send({ devedor });
+      return res.status(200).send({ divida });
     } catch (error) {
       return res.status(500).send({ message: error });
     }
   }
 
   //======================================================================
-  // CRIA UM DEVEDOR
+  // CRIA UMA DIVIDA
   //======================================================================
-  async createDevedor(req: Request, res: Response): Promise<Response | any> {
+  async createDivida(req: Request, res: Response): Promise<Response | any> {
     const { id } = req.params;
 
     const { data, nome, valor } = req.body;
@@ -53,30 +53,30 @@ class DevedoresController {
     }
 
     try {
-      const newDevedor = new Devedores();
+      const newDivida = new Dividas();
 
-      newDevedor.data = data;
-      newDevedor.nome = nome;
-      newDevedor.valor = valor;
-      newDevedor.user = user;
+      newDivida.data = data;
+      newDivida.nome = nome;
+      newDivida.valor = valor;
+      newDivida.user = user;
 
-      await devedoresRepository.save(newDevedor);
+      await dividasRepository.save(newDivida);
 
-      return res.status(201).send({ devedor: newDevedor });
+      return res.status(201).send({ divida: newDivida });
     } catch (error) {
       return res.status(500).send({ message: error });
     }
   }
 
   //======================================================================
-  // ATUALIZAR UM DEVEDOR
+  // ATUALIZAR UMA DIVIDA
   //======================================================================
-  async updateDevedor(req: Request, res: Response): Promise<Response | any> {
-    const { id_devedor, id_user } = req.params;
+  async updateDivida(req: Request, res: Response): Promise<Response | any> {
+    const { id_divida, id_user } = req.params;
 
     const { data, nome, valor } = req.body;
 
-    if (!id_devedor || !id_user || !data || !nome || !valor) {
+    if (!id_divida || !id_user || !data || !nome || !valor) {
       return res.status(401).send({ message: "preencha todos os campos" });
     }
 
@@ -86,47 +86,47 @@ class DevedoresController {
       return res.status(404).send({ message: "Usuário não encontrado" });
     }
 
-    const devedorUpdate = await devedoresRepository.findOneBy({
-      id_devedor: id_devedor,
+    const dividaUpdate = await dividasRepository.findOneBy({
+      id_divida: id_divida,
     });
 
-    if (!devedorUpdate) {
-      return res.status(404).send({ message: "Devedor não encontrado" });
+    if (!dividaUpdate) {
+      return res.status(404).send({ message: "Divida não encontrada" });
     }
 
     try {
-      devedorUpdate.data = data;
-      devedorUpdate.nome = nome;
-      devedorUpdate.valor = valor;
+      dividaUpdate.data = data;
+      dividaUpdate.nome = nome;
+      dividaUpdate.valor = valor;
 
-      await devedoresRepository.save(devedorUpdate);
+      await dividasRepository.save(dividaUpdate);
 
-      return res.status(201).send({ devedor: devedorUpdate });
+      return res.status(201).send({ divida: dividaUpdate });
     } catch (error) {
       return res.status(500).send({ message: error });
     }
   }
 
   //======================================================================
-  // DELETA UM DEVEDOR
+  // DELETA UMA DIVIDA
   //======================================================================
-  async deleteDevedor(req: Request, res: Response): Promise<Response | any> {
+  async deleteDivida(req: Request, res: Response): Promise<Response | any> {
     const { id } = req.params;
 
     if (!id) {
-      return res.status(400).send({ message: "ID do devedor é obrigatório." });
+      return res.status(400).send({ message: "ID da divida é obrigatória." });
     }
 
     try {
-      const devedor = await devedoresRepository.findOneBy({ id_devedor: id });
+      const divida = await dividasRepository.findOneBy({ id_divida: id });
 
-      if (!devedor) {
-        return res.status(404).send({ message: "Devedor não encontrada." });
+      if (!divida) {
+        return res.status(404).send({ message: "Divida não encontrada." });
       }
 
-      await devedoresRepository.delete(id);
+      await dividasRepository.delete(id);
 
-      return res.status(200).send({ message: "Devedor deletado com sucesso." });
+      return res.status(200).send({ message: "Divida deletada com sucesso." });
     } catch (error) {
       console.error(error);
       return res.status(500).send({ message: "Erro ao deletar devedor." });
@@ -134,4 +134,4 @@ class DevedoresController {
   }
 }
 
-export default new DevedoresController();
+export default new DividasController();
