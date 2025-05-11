@@ -9,7 +9,7 @@ class UserController {
   async getAllUser(req: Request, res: Response): Promise<Response | any> {
     try {
       const users = await userRepository.find({
-        relations: ["metas", "ganhos", "despesas"],
+        relations: ["metas", "ganhos", "despesas", "devedores"],
       });
       return res.status(200).send({ users });
     } catch (error) {
@@ -26,7 +26,7 @@ class UserController {
     try {
       const user = await userRepository.findOne({
         where: { id_user: id },
-        relations: ["metas", "ganhos", "despesas"],
+        relations: ["metas", "ganhos", "despesas", "devedores"],
       });
       return res.status(200).send({ user });
     } catch (error) {
